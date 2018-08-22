@@ -34,6 +34,7 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'mirrors.apps.MirrorsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -80,7 +81,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'mirrors',
-        'USER': 'mirrors',
+        'USER': 'postgres',
         'PASSWORD': 'mirrors123',
         'HOST': '127.0.0.1',
         'PORT': '5432',
