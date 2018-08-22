@@ -1,4 +1,3 @@
-.RECIPEPREFIX +=
 .PHONY: build prod_build clean dev_run run
 
 TAG=$(shell git rev-parse HEAD)
@@ -12,22 +11,22 @@ build:
 
 run:
 	docker run -it --name mirrorweb \
-		--net=host \
-		-v /root/mirrorweb:/dist \
-		-d mirrorweb \
-		python3 /dist/manage.py runserver 0:8090
+	--net=host \
+	-v /root/mirrorweb:/dist \
+	-d mirrorweb \
+	python3 /dist/manage.py runserver 0:8090
 
 dev_postgres_1:
     docker run --name postgres \
-        -e POSTGRES_PASSWORD=mirrors123 \
-        --net=host \
-         -v /etc/data/pgdata:/var/lib/postgresql/data-d \
-         postgres
+    -e POSTGRES_PASSWORD=mirrors123 \
+    --net=host \
+    -v /opt/data/pgdata:/var/lib/postgresql/data-d \
+    -d postgres
 
 dev_run:
 	docker run -it --rm --name mirrorweb \
-		--net=host \
-		-v .:/dist \
-		--link dev_postgres_1:mysql \
-		-d mirrorweb \
-		python3 /dist/manage.py runserver 0:8090
+	--net=host \
+	-v .:/dist \
+	--link dev_postgres_1:mysql \
+	-d mirrorweb \
+	python3 /dist/manage.py runserver 0:8090
