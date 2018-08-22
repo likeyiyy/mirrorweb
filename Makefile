@@ -10,23 +10,24 @@ build:
 	docker tag $(DEV_REGISTRY)/mirrorweb:$(TAG) $(DEV_REGISTRY)/mirrorweb:latest
 
 run:
-	docker run -it --name mirrorweb \
-	--net=host \
+	docker run -it --name dev_mirrorweb \
+	-p 8090:8090 \
 	-v /root/mirrorweb:/dist \
-	-d mirrorweb \
+	--link dev_postgres_1:postgres \
+	-d likeyiyy/mirrorweb \
 	python3 /dist/manage.py runserver 0:8090
 
 dev_postgres_1:
-    docker run --name postgres \
+	docker run --name dev_postgres_1 \
     -e POSTGRES_PASSWORD=mirrors123 \
-    --net=host \
+	-p 5432:5432 \
     -v /opt/data/pgdata:/var/lib/postgresql/data-d \
     -d postgres
 
 dev_run:
-	docker run -it --rm --name mirrorweb \
-	--net=host \
-	-v .:/dist \
-	--link dev_postgres_1:mysql \
-	-d mirrorweb \
+	docker run -it --rm --name dev_mirrorweb \
+	-p 8090:8090 \
+	-v /root/mirrorweb:/dist \
+	--link dev_postgres_1:postgres \
+	likeyiyy/mirrorweb \
 	python3 /dist/manage.py runserver 0:8090
