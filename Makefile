@@ -1,3 +1,4 @@
+.RECIPEPREFIX +=
 .PHONY: build prod_build clean dev_run run
 
 TAG=$(shell git rev-parse HEAD)
@@ -17,10 +18,10 @@ run:
 		python3 /dist/manage.py runserver 0:8090
 
 dev_postgres_1:
-    docker run --name postgres
-        -e POSTGRES_PASSWORD=mirrors123
-        --net=host
-         -v /etc/data/pgdata:/var/lib/postgresql/data-d
+    docker run --name postgres \
+        -e POSTGRES_PASSWORD=mirrors123 \
+        --net=host \
+         -v /etc/data/pgdata:/var/lib/postgresql/data-d \
          postgres
 
 dev_run:
