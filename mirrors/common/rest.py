@@ -26,7 +26,7 @@
 import warnings
 import re
 from rest_framework import serializers
-from rest_framework.renderers import JSONRenderer
+from rest_framework.parsers import JSONParser
 from django.urls import path
 from django.http import JsonResponse
 
@@ -66,6 +66,11 @@ class RestfulResource(object):
     def serialize_query_simple(self, query, fields=None):
         s = self.get_serializer(fields)
         return s(query, many=True).data
+    
+    def getdata(self, request):
+        if request.method == 'POST':
+            return JSONParser().parse(request)
+        raise Exception('Only Support POST method.')
     
     def response(self, data):
         return JsonResponse(data, safe=False)
