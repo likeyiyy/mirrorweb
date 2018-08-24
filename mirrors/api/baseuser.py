@@ -23,15 +23,12 @@
 #            │ ─┤ ─┤       │ ─┤ ─┤
 #            └──┴──┘       └──┴──┘
 
-from django.urls import path
+from mirrors.api.__base__ import RawBaseResource, api
+from mirrors.models import BaseUser
 
-from . import views
-from mirrors.api import api
 
-restful_urlpatterns = api.setup()
+class BaseUserResource(RawBaseResource):
+    pass
 
-urlpatterns = [
-    path('', views.index, name='index'),
-]
 
-urlpatterns.extend(restful_urlpatterns)
+api.register(BaseUser, BaseUserResource)

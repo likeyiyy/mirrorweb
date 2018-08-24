@@ -23,15 +23,5 @@
 #            │ ─┤ ─┤       │ ─┤ ─┤
 #            └──┴──┘       └──┴──┘
 
-from django.urls import path
 
-from . import views
-from mirrors.api import api
-
-restful_urlpatterns = api.setup()
-
-urlpatterns = [
-    path('', views.index, name='index'),
-]
-
-urlpatterns.extend(restful_urlpatterns)
+from mirrors.api.baseuser import *

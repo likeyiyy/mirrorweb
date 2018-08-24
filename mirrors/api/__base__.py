@@ -22,16 +22,25 @@
 #          └─┐  ┐  ┌───────┬──┐  ┌──┘
 #            │ ─┤ ─┤       │ ─┤ ─┤
 #            └──┴──┘       └──┴──┘
+from mirrors.common.rest import RestfulApi, RestfulResource
 
-from django.urls import path
+api = RestfulApi()
 
-from . import views
-from mirrors.api import api
 
-restful_urlpatterns = api.setup()
+class RawBaseResource(RestfulResource):
+    def get_urls(self):
+        return [
+            ('/id_list', self.id_list),
+            ('/simple_list_with_ids', self.simple_list_with_ids),
+        ]
+    
+    def id_list(self, request):
+        query = self.model.objects.all()
+        result = self.serialize_query_simple(query)
+        return self.response(result)
+    
+    def simple_list_with_ids(self, request):
+        pass
 
-urlpatterns = [
-    path('', views.index, name='index'),
-]
 
-urlpatterns.extend(restful_urlpatterns)
+api.register(None, RawBaseResource)

@@ -7,9 +7,15 @@ name = "pypi"
 Django = ">=2.1"
 "psycopg2-binary" = "==2.7.5"
 ipython = "*"
+djangorestframework = "*"
+markdown = "*"
+django-filter = "*"
 
 [requires]
 python_version = "3.5"
 
 [pipenv]
 allow_prereleases = true
+
+[dev-packages]
+ipdb = "*"
