@@ -24,6 +24,7 @@
 #            └──┴──┘       └──┴──┘
 from mirrors.common.rest import RestfulApi, RestfulResource
 from django.views.decorators.csrf import csrf_exempt
+from mirrors.common.logger import logger
 
 
 api = RestfulApi()
@@ -43,6 +44,7 @@ class RawBaseResource(RestfulResource):
         query = self.model.objects.filter(**request_args)
         query_result = self.serialize_query_simple(query, fields=['id'])
         ids = [_.get('id') for _ in query_result]
+        logger.debug(ids)
         return self.response(ids)
     
     def simple_list_with_ids(self, request):

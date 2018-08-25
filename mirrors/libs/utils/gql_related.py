@@ -6,7 +6,7 @@ from werkzeug.datastructures import ImmutableMultiDict
 from jinja2.sandbox import ImmutableSandboxedEnvironment
 
 import decimal
-
+from mirrors.common.logger import logger
 
 class DjangoLoader(BaseLoader):
 
@@ -48,9 +48,9 @@ def jinja_render(content, context):
     try:
         return env.get_template(content).render(context)
     except Exception as e:
-        print('----- render content failed -----')
-        print(content)
-        print('--------------- end -------------')
+        logger.debug('----- render content failed -----')
+        logger.debug(content)
+        logger.debug('--------------- end -------------')
         import traceback
         traceback.print_exc()
         raise

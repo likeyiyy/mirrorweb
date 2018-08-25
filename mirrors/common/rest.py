@@ -29,6 +29,7 @@ from rest_framework import serializers
 from rest_framework.parsers import JSONParser
 from django.urls import path
 from django.http import JsonResponse
+from mirrors.common.logger import logger
 
 def slugify(s):
     return re.sub('[^a-z0-9_\-]+', '-', s.lower())
@@ -101,7 +102,7 @@ class RestfulApi(object):
 
     def register(self, model, provider=RestfulResource):
         if model in self._registry.keys():
-            print(provider, self._registry[model])
+            logger.warning(provider, self._registry[model])
             warnings.warn('Duplicate model registry: {}'.format(model))
         self._registry[model] = provider(self, model)
 

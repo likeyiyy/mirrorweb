@@ -8,6 +8,7 @@ from django.utils import tree
 from django.db.models import Q, QuerySet
 from .visitor import BaseVisitor
 from mirrors.libs.advance_search.parser import AttrAST, AndAST, OrAST, NotAST
+from mirrors.common.logger import logger
 
 class BaseRewriteVisitor(BaseVisitor):
 
@@ -395,7 +396,7 @@ class AdvSearchVisitor(BaseVisitor):
         query = AdvSelectQuery(parser.lookup_model_or_doc)
         query = parser.filter_query([value], query)
         if not len(query._where):
-            print('Unknown Attr Query:', key, value)
+            logger.warning('Unknown Attr Query:', key, value)
             return
     
         key_items = key.split('__')
