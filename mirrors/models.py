@@ -28,20 +28,20 @@ from django.db import models
 # Create your models here.
 
 class BaseUser(models.Model):
-    name = models.CharField(max_length=200)
     email = models.CharField(max_length=200)
     mobile = models.CharField(max_length=64)
     uid = models.CharField(max_length=200)
     
     def __str__(self):
-        return self.name
+        return self.email
     
 
 class User(models.Model):
     baseuser =models.OneToOneField(BaseUser, on_delete=models.CASCADE)
+    name = models.CharField(max_length=200, null=True)
     
     def __str__(self):
-        return self.baseuser.name
+        return self.name
     
     
 class CustomFieldData(models.Model):

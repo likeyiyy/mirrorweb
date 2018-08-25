@@ -23,7 +23,7 @@
 #            │ ─┤ ─┤       │ ─┤ ─┤
 #            └──┴──┘       └──┴──┘
 
+import urllib.parse
 
-from mirrors.api.baseuser import *
-from mirrors.api.user import *
-from mirrors.api.options import *
+def decode_uri(str):
+    return urllib.parse.unquote(str)

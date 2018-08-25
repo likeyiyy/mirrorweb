@@ -23,7 +23,12 @@
 #            │ ─┤ ─┤       │ ─┤ ─┤
 #            └──┴──┘       └──┴──┘
 
+from mirrors.api.__base__ import RawBaseResource, api
+from mirrors.models import User
 
-from mirrors.api.baseuser import *
-from mirrors.api.user import *
-from mirrors.api.options import *
+
+class BaseUserResource(RawBaseResource):
+    pass
+
+
+api.register(User, BaseUserResource)

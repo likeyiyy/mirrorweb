@@ -10,6 +10,8 @@ ipython = "*"
 djangorestframework = "*"
 markdown = "*"
 django-filter = "*"
+"jinja2" = "*"
+werkzeug = "*"
 
 [requires]
 python_version = "3.5"

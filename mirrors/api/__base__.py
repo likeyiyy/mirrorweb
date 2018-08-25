@@ -39,23 +39,30 @@ class RawBaseResource(RestfulResource):
         ]
     
     def id_list(self, request):
-        query = self.model.objects.all()
+        request_args = request.GET.dict()
+        query = self.model.objects.filter(**request_args)
         query_result = self.serialize_query_simple(query, fields=['id'])
         ids = [_.get('id') for _ in query_result]
-        return self.response({
-            'ids': ids
-        })
+        return self.response(ids)
     
     def simple_list_with_ids(self, request):
-        pass
+        request_args = request.GET.dict()
+        query = self.model.objects.filter(**request_args)
+        query_result = self.serialize_query_simple(query)
+        return self.response(query_result)
     
     def _process_data(self, data):
         s_class = self.get_serializer()
-        serializer = s_class(data=data)
-        if serializer.is_valid():
-            ins = serializer.save()
-            return {'status': True, 'data': ins.id}
-        return {'status': False, 'message': serializer.errors}
+        id = data.get('id')
+        if id:
+            self.model.objects.filter(id=id).update(**data)
+            return {'status': True, 'data': id}
+        else:
+            serializer = s_class(data=data)
+            if serializer.is_valid():
+                ins = serializer.save()
+                return {'status': True, 'data': ins.id}
+            return {'status': False, 'message': serializer.errors}
 
     def _add(self, data):
         if data.get('id'):
@@ -64,8 +71,8 @@ class RawBaseResource(RestfulResource):
         return result
         
     def _edit(self, data):
-        if data.get('id'):
-            return {'status': False, 'message': 'In Add Mode, You Must Input Id'}
+        if not data.get('id'):
+            return {'status': False, 'message': 'In Edit Mode, You Must Input Id'}
         result = self._process_data(data)
         return result
     
