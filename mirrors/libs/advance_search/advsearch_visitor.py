@@ -191,10 +191,10 @@ class QueryTreeNode(object):
         return query
 
     def to_query_node(self, model):
-        query = model.select()
+        query = model.objects.all()
         query = self.apply(query)
-        if query._where:
-            query_node = reduce(and_connector, query._where)
+        if query.where:
+            query_node = reduce(and_connector, query.where)
         else:
             query_node = None
         return query_node
@@ -269,7 +269,9 @@ def query_joins_to_join_infos(current, joins):
 
 
 class AdvSelectQuery(Query):
-
+    _joins = {}
+    _joined_models = []
+    
     def join(self, model, join_type=None, on=None, alias=None):
         assert alias is None, 'AdvSelectQuery join does not support alias!'
         if model in self._joined_models or model == self.model:
@@ -367,8 +369,8 @@ class AdvSearchVisitor(BaseVisitor):
             query.query = ['id']
             where = Q(_model=query.model, id__in=query)
             return where, []
-
-        where = reduce(and_connector, query._where)
+        
+        where = reduce(and_connector, [query.where])
 
         # 将joins中的model替换为model proxy
         modify_joins_model_proxy(joins)
@@ -383,7 +385,6 @@ class AdvSearchVisitor(BaseVisitor):
     
         key = ast.key
         value = self.decode_value(ast.val)
-    
         parser = CustomRegisterLookupParser(
             model,
             key,
@@ -395,7 +396,7 @@ class AdvSearchVisitor(BaseVisitor):
     
         query = AdvSelectQuery(parser.lookup_model_or_doc)
         query = parser.filter_query([value], query)
-        if not len(query._where):
+        if not len(query.where):
             logger.warning('Unknown Attr Query:', key, value)
             return
     

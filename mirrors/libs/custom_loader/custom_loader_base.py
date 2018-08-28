@@ -25,7 +25,6 @@
 
 import operator
 from collections import OrderedDict
-from functools import lru_cache
 from mirrors.libs.utils import Singleton
 
 from mirrors.common.options import FieldShowScene
@@ -419,7 +418,7 @@ class BaseLoader(object):
 
     def __init__(self, host=None):
         lru_len = 70
-        self.model_manager_map = lru_cache(lru_len)
+        self.model_manager_map = {}
         self.host = host
 
     def get_model_manager(self, model_name):
@@ -506,7 +505,7 @@ class LoaderService(object):
 
     @property
     def manager(self):
-        host = g.host
+        host = '127.0.0.1:8000'
         manager = self._host_context.get(host)
         if manager:
             return manager

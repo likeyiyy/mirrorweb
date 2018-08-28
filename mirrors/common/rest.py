@@ -39,6 +39,11 @@ class RestfulResource(object):
     def __init__(self, rest_api, model):
         self.api = rest_api
         self.model = model
+        if self.model:
+            self._model_name = self.model.__name__.lower()
+        else:
+            self._model_name = '__base__'
+            
         self.allowed_methods = [
             'GET',
             'POST',

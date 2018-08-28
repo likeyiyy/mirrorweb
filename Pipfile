@@ -12,6 +12,7 @@ markdown = "*"
 django-filter = "*"
 "jinja2" = "*"
 werkzeug = "*"
+python-dateutil = "*"
 
 [requires]
 python_version = "3.5"

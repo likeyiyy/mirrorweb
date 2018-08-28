@@ -4,7 +4,6 @@ class BaseVisitor(object):
         from mirrors.libs.utils import gql_render
         value = (value or '').strip()
         value = gql_render(value)
-        value = value.decode('utf8')
         return value
 
     def ast_to_args(self, ast):

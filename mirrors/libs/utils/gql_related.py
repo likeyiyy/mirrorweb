@@ -38,6 +38,8 @@ default_jinja_context = {
 
 
 def jinja_render(content, context):
+    if not content:
+        content = {}
     from jinja2.runtime import Undefined
     env = ImmutableSandboxedEnvironment(
         loader=DjangoLoader(),
@@ -64,13 +66,14 @@ def jinja_render_many(arr, context):
 
 
 def gql_render(str, context=None):
-    return jinja_render(str, context)
+    return str
 
 
 def parse_gql(gql, model, custom_query_model=None):
     from mirrors.libs.advance_search.parser import Parser
     from mirrors.libs.advance_search.advsearch_visitor import AdvSearchVisitor, AdvSearchRewriteVisitor
     ast = Parser.parse(gql)
+    # 防止前端传错误的gql，进行重写
     visitor = AdvSearchRewriteVisitor()
     ast = ast.accept(visitor)
 

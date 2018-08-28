@@ -22,10 +22,12 @@
 #          └─┐  ┐  ┌───────┬──┐  ┌──┘
 #            │ ─┤ ─┤       │ ─┤ ─┤
 #            └──┴──┘       └──┴──┘
+from werkzeug.datastructures import ImmutableMultiDict
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from mirrors.common.rest import RestfulApi, RestfulResource
 from django.views.decorators.csrf import csrf_exempt
 from mirrors.common.logger import logger
-
+from mirrors.libs.utils.gql_related import parse_gql
 
 api = RestfulApi()
 
@@ -39,19 +41,75 @@ class RawBaseResource(RestfulResource):
             ('/simple_list_with_ids', self.simple_list_with_ids),
         ]
     
+    def _process_paginate(self, query, request_args=None, unlimited=False):
+        try:
+            paginate_by = int(request_args.get('paginate_by')  or 10,)
+        except:
+            paginate_by = 10
+        page = request_args.get('page')
+        pq = Paginator(query, paginate_by)
+        currentpage = page
+        totalpages = pq.num_pages()
+        totalcount = pq.count()
+        query = pq.get_page(currentpage)
+        return query, currentpage, totalpages, totalcount
+
+    def _process_query(self, query, request_args=None):
+        gql = request_args.get('gql') or ''
+        if gql:
+            query_node = parse_gql(gql, self.model, self._model_name)
+            if query_node is not None:
+                query = query.filter(query_node)
+        else:
+            query = self.model.objects.filter(**request_args)
+        return query
+    
+    def _process_id_list(self, query, request_args, unlimited=False):
+        query = self._process_query(query, request_args=request_args)
+        
+        if unlimited is None:
+            unlimited = bool(request_args.get('unlimited'))
+        query, currentpage, totalpages, totalcount = self._process_paginate(
+            query,
+            request_args=request_args,
+            unlimited=unlimited,
+        )
+        result = {
+            "ids": [_.id for _ in query],
+            "currentpage": currentpage,
+            "totalpages": int(totalpages),
+            "totalcount": totalcount,
+        }
+        if 'debug_query_sql' in request_args:
+            result['debug'] = {
+                'all_sql': query.print_sql(False, False),
+            }
+        return result
+    
+    def _id_list(self, request_args, unlimited=False):
+        query = self.model.objects.all()
+        result = self._process_id_list(
+            query,
+            request_args,
+            unlimited,
+        )
+        return result
+    
     def id_list(self, request):
         request_args = request.GET.dict()
+        result = self._id_list(request_args)
+        return self.response(result)
         query = self.model.objects.filter(**request_args)
         query_result = self.serialize_query_simple(query, fields=['id'])
         ids = [_.get('id') for _ in query_result]
-        logger.debug(ids)
         return self.response(ids)
     
     def simple_list_with_ids(self, request):
         request_args = request.GET.dict()
         query = self.model.objects.filter(**request_args)
-        query_result = self.serialize_query_simple(query)
-        return self.response(query_result)
+        result = self.serialize_query_simple(query)
+        logger.debug(result)
+        return self.response(result)
     
     def _process_data(self, data):
         s_class = self.get_serializer()
