@@ -412,15 +412,9 @@ class AdvSearchVisitor(BaseVisitor):
             node = child.accept(self)
             if not node:
                 continue
-        
-            if not isinstance(child, AttrAST) \
-                and node.has_reverse_join():
-                merge_tree = False
             nodes.append(node)
-    
         if not nodes:
             return
-    
         if operator == 'OR':
             ret = reduce(or_connector, nodes)
         else:

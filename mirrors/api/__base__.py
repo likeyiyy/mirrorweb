@@ -66,7 +66,7 @@ class RawBaseResource(RestfulResource):
     
     def _process_simple_list_with_ids(self, query, request_args, unlimited=False):
         query = self._process_query(query, request_args=request_args)
-        
+        print(query.query)
         if unlimited is None:
             unlimited = bool(request_args.get('unlimited'))
         query, currentpage, totalpages, totalcount = self._process_paginate(
@@ -82,7 +82,7 @@ class RawBaseResource(RestfulResource):
         }
         if 'debug_query_sql' in request_args:
             result['debug'] = {
-                'all_sql': query.print_sql(False, False),
+                'all_sql': query.query
             }
         return result
         
