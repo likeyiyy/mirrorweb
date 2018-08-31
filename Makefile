@@ -10,9 +10,10 @@ build:
 	docker tag $(DEV_REGISTRY)/mirrorweb:$(TAG) $(DEV_REGISTRY)/mirrorweb:latest
 
 run:
-	docker run -it --name dev_mirrorweb \
+	docker run -it --name mirrorweb \
 	-p 8090:8090 \
 	-v /root/mirrorweb:/dist \
+	-v /opt/log/mirrors/:/opt/log/mirrors/ \
 	--link dev_postgres_1:postgres \
 	-d likeyiyy/mirrorweb \
 	python3 /dist/manage.py runserver 0:8090
@@ -28,6 +29,7 @@ dev_run:
 	docker run -it --rm --name dev_mirrorweb \
 	-p 8090:8090 \
 	-v /root/mirrorweb:/dist \
+	-v /opt/log/mirrors/:/opt/log/mirrors/ \
 	--link dev_postgres_1:postgres \
 	likeyiyy/mirrorweb \
 	python3 /dist/manage.py runserver 0:8090
