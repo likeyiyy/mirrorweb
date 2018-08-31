@@ -49,8 +49,8 @@ class RawBaseResource(RestfulResource):
         page = request_args.get('page')
         pq = Paginator(query, paginate_by)
         currentpage = page
-        totalpages = pq.num_pages()
-        totalcount = pq.count()
+        totalpages = pq.num_pages
+        totalcount = pq.count
         query = pq.get_page(currentpage)
         return query, currentpage, totalpages, totalcount
 
@@ -63,6 +63,29 @@ class RawBaseResource(RestfulResource):
         else:
             query = self.model.objects.filter(**request_args)
         return query
+    
+    def _process_simple_list_with_ids(self, query, request_args, unlimited=False):
+        query = self._process_query(query, request_args=request_args)
+        
+        if unlimited is None:
+            unlimited = bool(request_args.get('unlimited'))
+        query, currentpage, totalpages, totalcount = self._process_paginate(
+            query,
+            request_args=request_args,
+            unlimited=unlimited,
+        )
+        result = {
+            "result": self.serialize_query_simple(query),
+            "currentpage": currentpage,
+            "totalpages": int(totalpages),
+            "totalcount": totalcount,
+        }
+        if 'debug_query_sql' in request_args:
+            result['debug'] = {
+                'all_sql': query.print_sql(False, False),
+            }
+        return result
+        
     
     def _process_id_list(self, query, request_args, unlimited=False):
         query = self._process_query(query, request_args=request_args)
@@ -99,15 +122,19 @@ class RawBaseResource(RestfulResource):
         request_args = request.GET.dict()
         result = self._id_list(request_args)
         return self.response(result)
-        query = self.model.objects.filter(**request_args)
-        query_result = self.serialize_query_simple(query, fields=['id'])
-        ids = [_.get('id') for _ in query_result]
-        return self.response(ids)
+    
+    def _simple_list_with_ids(self, request_args, unlimited=False):
+        query = self.model.objects.all()
+        result = self._process_simple_list_with_ids(
+            query,
+            request_args,
+            unlimited,
+        )
+        return result
     
     def simple_list_with_ids(self, request):
         request_args = request.GET.dict()
-        query = self.model.objects.filter(**request_args)
-        result = self.serialize_query_simple(query)
+        result = self._simple_list_with_ids(request_args)
         logger.debug(result)
         return self.response(result)
     

@@ -23,8 +23,12 @@
 #            │ ─┤ ─┤       │ ─┤ ─┤
 #            └──┴──┘       └──┴──┘
 
+from mirrors.api.__base__ import RawBaseResource, api
+from mirrors.models import Team
 
-from mirrors.api.baseuser import *
-from mirrors.api.user import *
-from mirrors.api.options import *
-from mirrors.api.team import *
+
+class TeamResource(RawBaseResource):
+    pass
+
+
+api.register(Team, TeamResource)

@@ -3,7 +3,7 @@ from functools import reduce
 
 from django.db.models.sql import Query
 
-from mirrors.common.orm import and_connector, JoinInfo
+from mirrors.common.orm import and_connector, JoinInfo, or_connector
 from django.utils import tree
 from django.db.models import Q, QuerySet
 from .visitor import BaseVisitor
@@ -394,49 +394,16 @@ class AdvSearchVisitor(BaseVisitor):
         if not parser.is_valid_lookup():
             return
     
-        query = AdvSelectQuery(parser.lookup_model_or_doc)
+        query = AdvSelectQuery(parser.lookup_model)
         query = parser.filter_query([value], query)
         if not len(query.where):
             logger.warning('Unknown Attr Query:', key, value)
             return
-    
-        key_items = key.split('__')
-        if key_items[-1] == parser.lookup_operator:
-            key_items = key_items[:-2]
-        else:
-            key_items = key_items[:-1]
-    
-        # 所有的joined model替换为代理对象，最后apply的时候再还原；
-        joins = []
-        if parser.joins:
-            model_proxy = None
-            for join in parser.joins:
-                if model_proxy:
-                    curr = model_proxy
-                else:
-                    curr = join['curr']
-                model_proxy = ModelProxy(join['be_joined'])
-                joins.append(
-                    JoinInfo(
-                        model=curr,
-                        join_model=model_proxy,
-                        on=join['curr_field'],
-                    ), )
-        else:
-            model_proxy = ModelProxy(query.model)
-    
-        where, custom_joins = self._compile_query(model_proxy, query)
-    
-        tree_node = self._make_tree_node(
-            query.model,
-            key_items,
-            joins,
-            custom_joins,
-        )
-        return QueryTreeNode(where, tree_node)
-
+        return Q(**{key:value})
+        
     def visit_attr(self, ast):
-        return self._visit_attr(ast, self.model)
+        attr = self._visit_attr(ast, self.model)
+        return attr
 
     def _visit_children_ast(self, ast, operator):
         nodes = []
@@ -454,9 +421,10 @@ class AdvSearchVisitor(BaseVisitor):
         if not nodes:
             return
     
-        ret = nodes[0]
-        for node in nodes[1:]:
-            ret = ret.connect(node, operator, merge_tree)
+        if operator == 'OR':
+            ret = reduce(or_connector, nodes)
+        else:
+            ret = reduce(and_connector, nodes)
         return ret
 
     def visit_or(self, ast):

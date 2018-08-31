@@ -27,8 +27,8 @@ from mirrors.api.__base__ import RawBaseResource, api
 from mirrors.models import User
 
 
-class BaseUserResource(RawBaseResource):
+class UserResource(RawBaseResource):
     pass
 
 
-api.register(User, BaseUserResource)
+api.register(User, UserResource)

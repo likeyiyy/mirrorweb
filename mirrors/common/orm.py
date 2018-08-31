@@ -51,14 +51,15 @@ def alias(model):
                 {'_real_model': model})
 
 def node_connector(connect_op='AND'):
-
     def connector(node1, node2):
         if node1 is None:
             return node2
         if node2 is None:
             return node1
-        return node1.connect(node2, connect_op)
-
+        if connect_op == 'AND':
+            return node1 & node2
+        else:
+            return node1 | node2
     return connector
 
 
@@ -751,7 +752,7 @@ class LookupParser(object):
         self.joins = []
         self.lookup_field = None
         self.lookup_operator = None
-        self.lookup_model_or_doc = None
+        self.lookup_model = None
         self._values = None
 
     def get_lookup_operators(self, lookups=None):
@@ -769,7 +770,7 @@ class LookupParser(object):
         if not curr:
             return
 
-        self.lookup_model_or_doc = curr
+        self.lookup_model = curr
 
         lookup = lookups[-1]
         lookup = self.parse_lookup_field(curr, lookup)
@@ -797,7 +798,7 @@ class LookupParser(object):
         raise NotImplementedError
 
     def get_lookup_info(self):
-        model_or_doc = self.lookup_model_or_doc or self.model_or_doc
+        model_or_doc = self.lookup_model or self.model_or_doc
         return model_or_doc, self.lookup_field, self.lookup_operator
     
     def set_values(self, values):
@@ -823,7 +824,7 @@ class DjangoLookupParser(LookupParser):
             rel_field = lookup_field
             on = None
             curr_meta_related_objects = {
-                '{0}_set'.format(_.name): _
+                '{0}'.format(_.name): _
                 for _ in curr._meta.related_objects
             }
             curr_meta_fields = {
@@ -833,7 +834,7 @@ class DjangoLookupParser(LookupParser):
                 field_obj = curr_meta_fields[rel_field]
                 if isinstance(field_obj, models.ForeignKey):
                     on = field_obj.name
-                    joined = field_obj.to
+                    joined = field_obj.related_model
                 else:
                     return
             else:
@@ -854,7 +855,7 @@ class DjangoLookupParser(LookupParser):
     def parse_lookup_field(self, model, lookup):
         # 基本字段的搜索走这里。
         curr_meta_related_objects = {
-            '{0}_set'.format(_.name): _
+            '{0}'.format(_.name): _
             for _ in model._meta.related_objects
         }
         curr_meta_fields = {

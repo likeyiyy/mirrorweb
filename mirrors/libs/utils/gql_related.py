@@ -76,11 +76,9 @@ def parse_gql(gql, model, custom_query_model=None):
     # 防止前端传错误的gql，进行重写
     visitor = AdvSearchRewriteVisitor()
     ast = ast.accept(visitor)
-
+    
     visitor = AdvSearchVisitor(model, custom_query_model)
     node = ast.accept(visitor)
-    if node:
-        node = node.to_query_node(model)
     return node
 
 def extract_args_or_gql(request_args, key):

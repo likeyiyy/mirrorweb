@@ -40,6 +40,8 @@ def get_all_args(request_args):
 
 
 class ModelQueryFilterManager(BaseModelManager):
+    all_operators = set()
+    
     def __init__(self, model_name=None):
         super(ModelQueryFilterManager, self).__init__(model_name)
         self.ignore_fields = set()
@@ -54,6 +56,7 @@ class ModelQueryFilterManager(BaseModelManager):
 
     def add_query(self, name, fn, operator):
         if operator:
+            self.all_operators.add(operator)
             key = "{}__{}".format(name, operator)
             self._registered_query_operators.setdefault(name, ['eq'])
             self._registered_query_operators[name].append(operator)
