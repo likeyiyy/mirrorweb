@@ -80,17 +80,14 @@ WSGI_APPLICATION = 'test_project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
+import json
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'mirrors',
-        'USER': 'postgres',
-        'PASSWORD': 'mirrors123',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
-    }
-}
+config_path = os.environ.get('MIRRORS_CONFIG')
+if not config_path:
+    config_path = '/opt/web/config-mirror.json'
+    
+json_config = json.loads(open(config_path).read())
+DATABASES = json_config['DATABASES']
 
 
 # Password validation
