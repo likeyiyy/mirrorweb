@@ -14,6 +14,7 @@ run:
 	-p 8090:8090 \
 	-v /root/mirrorweb:/dist \
 	-v /opt/log/mirrors/:/opt/log/mirrors/ \
+	-v /opt/web/:/opt/web/ \
 	--link dev_postgres_1:postgres \
 	-d likeyiyy/mirrorweb \
 	python3 /dist/manage.py runserver 0:8090
@@ -30,6 +31,7 @@ dev_run:
 	-p 8090:8090 \
 	-v /root/mirrorweb:/dist \
 	-v /opt/log/mirrors/:/opt/log/mirrors/ \
+	-v /opt/web/:/opt/web/ \
 	--link dev_postgres_1:postgres \
 	likeyiyy/mirrorweb \
 	python3 /dist/manage.py runserver 0:8090
