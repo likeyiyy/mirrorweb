@@ -105,3 +105,4 @@ venv.bak/
 .idea/
 mirrors/assets/node_modules
 mirrors/assets/package-lock.json
+mirrors/assets/dist
