@@ -132,9 +132,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, os.pardir, 'frontend', 'build')
+    os.path.join(BASE_DIR, 'mirrors', 'assets')
 ]
-import ipdb; ipdb.set_trace()
+
 CLIENT_CONFIG = {
     'CLIENT_CODE': 'business'
 }
