@@ -1,0 +1,21 @@
+{
+    "plugins":[
+        [
+            "import",
+            {
+                "libraryName":"antd",
+                "libraryDirectory":"es",
+                "style":true
+            },
+            "ant"
+        ],
+        [
+            "import",
+            {
+                "libraryName":"antd-mobile",
+                "libraryDirectory":"es"
+            },
+            "antd-mobile"
+        ]
+    ]
+}

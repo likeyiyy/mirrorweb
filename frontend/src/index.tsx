@@ -8,7 +8,10 @@ import { EnthusiasmAction } from './actions/index'
 import { IStoreState } from './types/index';
 import Hello from './containers/Hello';
 import { Provider } from 'react-redux';
-import { DatePicker } from 'antd';
+import { DatePicker, Button } from 'antd';
+import 'antd/dist/antd.css'
+
+
 
 
 const store = createStore<IStoreState, EnthusiasmAction, any, any>(enthusiasm, {
@@ -22,7 +25,11 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('root') as HTMLElement
 );
-ReactDOM.render(<DatePicker />, document.getElementById('DatePicker') as HTMLElement);
+ReactDOM.render((<div>
+    <Button>hello</Button>
+    <DatePicker />
+</div>),
+    document.getElementById('datePicker') as HTMLElement);
 
 
 registerServiceWorker();

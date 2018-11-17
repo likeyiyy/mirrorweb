@@ -107,3 +107,6 @@ frontend/package-lock.json
 frontend/build/dist
 frontend/node_modules
 node_modules
+# umi
+.umi
+.umi-production
