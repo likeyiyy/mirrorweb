@@ -37,4 +37,4 @@ def render_template_with_context(template_name, request, **context):
 
 
 def index(request):
-    return render_template_with_context('views/index.html', request=request)
+    return render_template_with_context('index.html', request=request)

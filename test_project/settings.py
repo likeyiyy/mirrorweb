@@ -58,8 +58,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'test_project.urls'
-SETTINGS_PATH = os.path.dirname(os.path.dirname(__file__))
-import ipdb; ipdb.set_trace()
+SETTINGS_PATH = 'mirrors'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
