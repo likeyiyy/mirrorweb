@@ -103,6 +103,7 @@ venv.bak/
 # mypy
 .mypy_cache/
 .idea/
-mirrors/assets/node_modules
-mirrors/assets/package-lock.json
-mirrors/assets/dist
+frontend/package-lock.json
+frontend/build/dist
+frontend/node_modules
+node_modules
