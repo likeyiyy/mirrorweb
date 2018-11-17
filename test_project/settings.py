@@ -60,7 +60,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'test_project.urls'
 SETTINGS_PATH = 'mirrors'
-SETTINGS_PATH_ASSETS = 'mirrors/assets'
+SETTINGS_PATH_ASSETS = '/dist/mirrors/assets'
 
 TEMPLATES = [
     {
