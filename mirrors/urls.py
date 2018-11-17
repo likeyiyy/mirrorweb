@@ -32,7 +32,7 @@ restful_urlpatterns = api.setup()
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('/main_v1', views.main_v1, name='main_v1'),
+    path('main_v1', views.main_v1, name='main_v1'),
 ]
 
 urlpatterns.extend(restful_urlpatterns)
