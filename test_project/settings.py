@@ -60,7 +60,6 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'test_project.urls'
 SETTINGS_PATH = 'mirrors'
-SETTINGS_PATH_ASSETS = '/dist/mirrors/assets'
 
 TEMPLATES = [
     {
@@ -68,7 +67,6 @@ TEMPLATES = [
         'DIRS': [
             os.path.join(SETTINGS_PATH, 'templates'),
             os.path.join(SETTINGS_PATH, 'assets'),
-            SETTINGS_PATH_ASSETS
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -136,8 +134,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'mirrors', 'assets'),
-    os.path.join(BASE_DIR, 'mirrors', 'assets', 'dist'),
+    os.path.join('mirrors', 'assets'),
+    os.path.join('mirrors', 'assets', 'dist'),
 ]
 
 CLIENT_CONFIG = {
