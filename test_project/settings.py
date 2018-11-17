@@ -59,14 +59,12 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'test_project.urls'
-SETTINGS_PATH = 'mirrors'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(SETTINGS_PATH, 'templates'),
-            os.path.join(SETTINGS_PATH, 'assets'),
+            os.path.join('frontend', 'build'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -134,8 +132,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    os.path.join('mirrors', 'assets'),
-    os.path.join('mirrors', 'assets', 'dist'),
+    os.path.join('frontend', 'build', 'static'),
 ]
 
 CLIENT_CONFIG = {
