@@ -31,7 +31,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     'likeyiyy.com',
-    '127.0.0.1'
+    '127.0.0.1',
+    '47.100.51.20'
 ]
 
 
