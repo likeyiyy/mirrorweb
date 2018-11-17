@@ -28,7 +28,13 @@ from django.shortcuts import render
 # Create your views here.
 
 from django.http import HttpResponse
+from django.template import loader
+
+
+def render_template_with_context(template_name, request, **context):
+    template = loader.get_template(template_name)
+    return HttpResponse(template.render(context, request))
 
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the mirrors index.")
+    return render_template_with_context('views/index.html', request=request)
