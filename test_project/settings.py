@@ -65,7 +65,11 @@ SETTINGS_PATH_ASSETS = '/dist/mirrors/assets'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(SETTINGS_PATH, 'templates'), SETTINGS_PATH_ASSETS],
+        'DIRS': [
+            os.path.join(SETTINGS_PATH, 'templates'),
+            os.path.join(SETTINGS_PATH, 'assets'),
+            SETTINGS_PATH_ASSETS
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
