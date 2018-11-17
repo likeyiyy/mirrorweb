@@ -38,3 +38,7 @@ def render_template_with_context(template_name, request, **context):
 
 def index(request):
     return render_template_with_context('index.html', request=request)
+
+
+def main_v1(request):
+    return render_template_with_context('main_v1.html', request=request)

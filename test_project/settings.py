@@ -60,11 +60,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'test_project.urls'
 SETTINGS_PATH = 'mirrors'
+SETTINGS_PATH_ASSETS = 'mirrors/assets'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(SETTINGS_PATH, 'templates')],
+        'DIRS': [os.path.join(SETTINGS_PATH, 'templates'), SETTINGS_PATH_ASSETS],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
