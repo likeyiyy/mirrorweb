@@ -131,6 +131,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, os.pardir, 'frontend', 'build')
+]
+import ipdb; ipdb.set_trace()
 CLIENT_CONFIG = {
     'CLIENT_CODE': 'business'
 }
